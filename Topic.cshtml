@@ -1,0 +1,213 @@
+﻿@model Test_MVC.Models.MainTopic   
+@using Test_MVC.Models
+@{
+    int tId = (int)Session["Id"];
+    UserProfile up = (UserProfile)Session["user"];
+}
+
+<div id="">
+    <div id="shouldbe">
+        <div style="min-height:600px" id="content_wrapper" class="content single">
+            <div class="container">
+                <div class="row">
+
+                    <div class="panel panel-default col-lg-3 sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                        <div class="panel-heading sidebar-title" style="background-color: darkcyan;">
+                            <span style="font-size: 18px; font-family: Britannic; color: white">@Model.Name</span>
+                        </div>
+
+                        <div class="panel-body" style="padding:0%">
+                            <div id="menu-formget-features" class="rmm-main-list" style="padding:0%">
+                                @foreach (var v in Model.Lecture.Where(x => x.Teacher_Id == tId))
+                                {
+                                    <a class="" href="" onclick="myFunction(@v.LectureId)" style="color:darkcyan"><div id="menu-item-30013" class="panel panel-default Topic" style="padding: 8px; margin: 10px; background-color: #fbfbfb; font-size: medium; font-family: 'Century Gothic'">@v.Description</div></a>
+                                }
+                            </div>
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $(".Topic").hover(function () {
+                                    $(this).css("color", "white");
+                                    $(this).css("background-color", "darkcyan");
+                                },
+                                function () {
+                                    $(this).css("color", "darkcyan");
+                                    $(this).css("padding", "8px");
+                                    $(this).css("background-color", "#fbfbfb ");
+                                }
+                                );
+
+                            });
+                        </script>
+
+                    </div>
+
+                    @Scripts.Render("~/bundles/jquery")
+                    <script>
+                        function getTeacher(value, val) {
+                            $("#shaki").empty().load("/Teacher/Topic?id="+value+"&mainId="+val);
+                        }
+
+                    </script>
+                    <div id="col-md-7" class="col-lg-7 panel panel-default sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%;">
+
+                        <!-- /.row -->
+                        <div id="shaki"></div>
+                        <div class="col-lg-12 panel-default " style="padding: 0%;" id="fLecture">
+                            @{
+                                Lecture lect = null;
+                                try
+                                {
+                                    lect = new db().Lecture.First(x => x.MainTopic_Id == Model.MainTopicId && x.Teacher_Id == tId);
+
+
+                                    <div class="col-lg-12 panel-default " style="padding: 0%;">
+
+                                        <div class="panel-heading sidebar-title" style="background-color: darkcyan">
+                                            <span style="font-size: 18px; font-family: Britannic; color: white">@lect.Description</span>
+                                        </div>
+
+                                        <div style="padding:1%" id="">
+                                            <iframe frameborder="0" style="width:100%; height:430px" src="@lect.Name"></iframe>
+                                        </div>
+                                        <hr />
+                                        <br />
+                                        <div class="col-lg-12">
+                                            <form action="../../Teacher/Add_Comment/@lect.LectureId" method="post" style="border:ridge ;width :100%">
+                                                <textarea class="col-lg-12" name="Comment" id="Comment" placeholder="Ask a Question..."></textarea>
+                                                <input type="submit" value="Comment">
+
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                    {
+                                        lect.Comment.Reverse();
+                                        foreach (var v in lect.Comment)
+                                        {
+                                            v.Reply.Reverse();
+                                            int countOfRepl = 0;
+                                            String RepId = "TogetOf" + v.CommentId;
+                                            <div class="col-lg-12 panel panel-default" style="border-color:darkcyan; padding: 0%; margin-bottom:1%; ">
+
+                                                <div class="col-lg-12 panel-body" style="background-color: darkcyan; padding: 0px; margin-bottom:0px">
+                                                    <div class="col-lg-12" style="padding:3px;">
+                                                        <img src="../../Content/images/logo.png" width="50" height="50" style="float:left; " />
+                                                        <p style="padding-top:3px">
+                                                            <a><span style="color:white; margin-left: 1%; font-size: 17px">@v.UserProfile.UserName</span></a>
+                                                            <br>
+                                                            <span style="color: white; font-family: Arial; margin-left: 1%; font-size: 13px;">@v.When</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-lg-12" style="padding:0px; margin-top:0px">
+                                                        <p style="color: white; font-family: 'Century Gothic'; margin-left: 1%; font-size: 13px;">@v.Comment1</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-12 panel-body" style="background-color:rgba(248, 247, 247, 0.52); padding: 0px; margin: 0px;">
+                                                    <div class="col-lg-12" style="padding: 3px; margin-top: 1%;">
+                                                        <a class="btn btn-default" style="padding-top: 2px; padding-bottom: 2px; padding-left: 1%; margin-left: 1%; font-size: 10px; font-family: Arial; width: 63px; text-align: center; ">
+                                                            <span onclick="AllReplys(@RepId)">All Replies</span>
+                                                        </a>
+                                                    </div>
+                                                    <div style="padding:3px; margin-top:1%;" id="@v.CommentId" class="col-lg-12">
+                                                        @foreach (var obj in v.Reply)
+                                                        {
+
+                                                            countOfRepl = countOfRepl + 1;
+                                                            if (countOfRepl < 5)
+                                                            {
+                                                                <div style="margin-left:1%">
+                                                                    <p><img src="../../Content/images/ width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="@RepId" onload="ToBeHide(@obj.ReplyId)" id="@obj.ReplyId" style="margin-left:1%">
+                                                                    <p><img src="../../Content/images/ width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        @{
+                                                        String comId = "Reply" + v.CommentId;
+                                                        String rId = "pId" + v.CommentId;
+                                                        }
+
+                                                        <div id="@rId" class="col-lg-12" style="padding:1%; margin:0px">
+                                                            <span class="col-lg-1 pull-left" style="padding:0px;">
+                                                                <img src="../../Images/id.jpg" width="40px" height="40px" style="" />
+                                                            </span>
+                                                            <p class="col-lg-11" style="padding:0px;padding-top:3px">
+                                                                <input class="form-control pull-right" style="" type="text" required name="Reply" onchange="Replythis(@v.CommentId)" id="@comId" placeholder="Answer tis question" />
+                                                            </p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+                                            @Scripts.Render("~/bundles/jquery")
+                                            <script>
+
+                                                function ToBeHide(id) {
+                                                    $("#" + id).hide();
+                                                }
+                                                function AllReplys(id) {
+                                                    $("." + id).show();
+                                                }
+                                                function Replythis(id) {
+                                                    $.post("/Teacher/SubmitReply", { id: id, Name: $("#Reply" + id).val() }, function (data) {
+
+                                                        var pi = "pId" + id;
+                                                        $('#' + pi).remove();
+                                                        $('#' + id).append(data.result);
+                                                        var ReplId = "Reply" + id;
+                                                        var str = "<div id=" + "\"" + pi + "\"" + " class=" + "\"" + "col-lg-12" + "\"" + "style=" + "\"" + "padding:1%; margin:0px" + "\"" + ">";
+                                                        str += "<span class=" + "\"" + "col-lg-1 pull-left" + "\"" + " style=" + "\"" + "padding:0px;" + "\"" + ">";
+                                                        str += "<img src=" + "\"" + "../../Images/id.jpg" + "\"" + " width=" + "\"" + "40px" + "\"" + " height=" + "\"" + "40px" + "\"" + " />";
+                                                        str += "</span>";
+                                                        str += " <p class=" + "\"" + "col-lg-11" + "\"" + "style=" + "\"" + "padding:0px;padding-top:3px" + "\"" + ">";
+                                                        ReplId.trim();
+                                                        str += "<input class=" + "\"" + "form-control pull-right" + "\"" + " type=" + " \"" + "text" + "\" required " + " name=" + " \"" + "Reply" + "\" " + " onchange=" + " \"" + "Replythis(" + id + ")" + "\"" + " id=" + "\"" + ReplId + "\" " + " placeholder=" + " \"" + "Answer this Question..." + "\" " + " />";
+                                                        str += " </p></div>";
+                                                        $("#" + id).append(str);
+
+                                                    });
+                                                }
+
+                                            </script>
+                                        }
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+                                    <h3>No Lecture Found</h3>
+                                }
+                            }
+                        </div>
+                    </div>
+                    @Scripts.Render("~/bundles/jquery")
+                    <script>
+
+
+
+                        function myFunction(id) {
+                            $('#shaki').load('/Teacher/Lecture?id=' + id);
+                            $("#fLecture").hide();
+                        }
+
+                    </script>
+
+                </div>
+                <!--            <div class="col-md-3 col-sm-4">-->
+                <!--            </div> -->
+
+            </div>
+        </div>
+</div>
+</div>

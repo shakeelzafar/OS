@@ -1,0 +1,113 @@
+﻿@model Test_MVC.Models.SubjectClass
+           
+<div id="content_wrapper" style="min-height:600px" class="content single">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default col-lg-3 sidebar-page rmm taxlist graphite" style="border-left-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                <div class="panel-heading sidebar-title" style="background-color: darkcyan;">
+                    <span style="font-size: 18px; font-family: Britannic; color: white">Features</span>
+                </div>
+                <div class="panel-body" style="padding-left:0px">
+                    <ul id="menu-formget-features" class="rmm-main-list" style="">
+                        <li id="menu-item-30013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30013" style="font-size:medium; font-family:'Century Gothic'">Total Questions: </li>
+                        <li id="menu-item-30013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30013" style="font-size:medium; font-family:'Century Gothic'">Total Marks: </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--
+                <div class="panel-body col-lg-7" style="padding:0%; margin:1%">
+                    <ul style="list-style:none; padding-left:5px ">
+                        <li> <b style="font-size: medium; font-family: 'Lucida Bright'">Course: &nbsp;</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; Quiz No:</li>
+                        <li> <b style="font-size: medium; font-family: 'Lucida Bright'">Instructor: &nbsp;</b></li>
+                    </ul>
+                </div>
+            -->
+
+
+            <div class="panel panel-default col-lg-8" style="border-color: darkcyan; padding: 0%; margin: 1%">
+
+                <div class="panel-heading" style="background-color: darkcyan;">
+                    <span style="font-size: 18px; font-family: Britannic; color: white" id="childOfCooCoo"><b>@Model.Subject.Name</b></span>
+                </div>
+
+                <div class="panel-body" style="padding:2px; padding-bottom:0px">
+
+                    <form action="../../Teacher/AddClassQuiz/@Model.SubClassId" class="form-horizontal" role="form" method="post">
+
+                        @{
+                            int numOfQ = (int)Session["NumOfQuestins"];
+                        }
+                        @for (int i = 1; i <= numOfQ; i++)
+                        {
+                            <div class="panel panel-default" style="border-color: darkcyan; padding: 0px; margin-bottom: 2px">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Question  @i:</label>
+                                        <div class="col-lg-10">
+                                            <textarea class="form-control" name="QuestionNo" placeholder="Write your question here." required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="optionA" style="font-family: Candara; font-size: medium; color: darkcyan;">Option A:</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" name="Option_A" placeholder=" Enter Option A" required />
+                                        </div>
+
+                                        <label class="control-label col-lg-2" for="optionB" style="font-family: Candara; font-size: medium; color: darkcyan;">Option B:</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" name="Option_B" placeholder=" Enter Option B" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="optionC" style="font-family: Candara; font-size: medium; color: darkcyan;">Option C:</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" name="Option_C" placeholder="Enter Option C" required />
+                                        </div>
+
+                                        <label class="control-label col-lg-2" for="optionD" style="font-family: Candara; font-size: medium; color: darkcyan;">Option D:</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" name="Option_D" placeholder="Enter Option D" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2 " for="correctOption" style="font-family: Candara; font-size: medium; color: darkcyan;">Correct:</label>
+                                        <div class="col-lg-4">
+                                            <select class="form-control input-sm" required name="Correct">
+                                                <option>Option A</option>
+                                                <option>Option B</option>
+                                                <option>Option C</option>
+                                                <option>Option D</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="panel panel-default col-lg-12" style="border-color: darkcyan; padding: 0px; margin-bottom: 2px">
+                            <div class="col-lg-4" style="padding:0px">
+                            </div>
+
+                            <div class="col-lg-4" style="padding: 0px;margin:5px; ">
+                                <input type="submit" value="Submit Quiz" class="form-control  btn btn-primary" style=" font-family:Arial; font-weight:600" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!--            <div class="col-md-3 col-sm-4">-->
+            <!--            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+

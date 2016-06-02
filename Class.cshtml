@@ -1,0 +1,174 @@
+﻿@model Test_MVC.Models.SubjectClass
+<div id="content_wrapper" style="min-height:600px" class="content single">
+    <div class="container">
+        <div class="row" style="">
+            <div class="panel panel-default col-lg-3 sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%; ">
+                <div class="panel-heading sidebar-title" style="background-color: darkcyan;">
+                    <span style="font-size: 18px; font-family: Britannic; color: white">@Model.Subject.Name</span>
+                </div>
+
+                <div class="panel-body" style="padding:0%">
+                    <div id="menu-formget-features" class="rmm-main-list" style="padding:0%">
+                        @foreach (var v in Model.Chapter)
+                        {
+                            <a class="" href="../../Teacher/Class/@Model.SubClassId#@v.ChapterId" style="color:darkcyan"><div id="menu-item-30013" class="panel panel-default Topic" style="padding: 8px; margin: 10px; background-color: #fbfbfb; font-size: medium; font-family: 'Century Gothic'">@v.Name</div></a>
+                        }
+                    </div>
+                </div>
+
+
+                <script>
+                    $(document).ready(function () {
+                        $(".Topic").hover(function () {
+                            $(this).css("color", "white");
+                            $(this).css("background-color", "darkcyan");
+                        },
+                        function () {
+                            $(this).css("color", "darkcyan");
+                            $(this).css("padding", "8px");
+                            $(this).css("background-color", "#fbfbfb ");
+                        }
+                        );
+
+                    });
+                </script>
+
+                <!--
+                    <div class="panel-body">
+                        <ul id="menu-formget-features" class="rmm-main-list" style="display: block;">
+                            @foreach (var v in Model.Chapter)
+                            {
+                                <li id="menu-item-30013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30013"><a href="../../Teacher/Class/@Model.SubClassId#@v.ChapterId">@v.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                -->
+            </div>
+
+            <div class=" panel panel-default col-lg-2 pull-right" style="border-color: darkcyan; padding: 0px; margin: 1%; margin-bottom: 5%">
+                <div class="panel-heading" style="background-color: darkcyan;" id="heading">
+                    <span style="font-size: 18px; font-family: Britannic; color: white">Class Members @Model.StudentTeacherClass.First(x => x.ClassSubjectId == Model.SubClassId).STCStudents.Count()</span>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        @{
+                            int id = (Int32)Session["Id"];
+                            int STCID = Model.StudentTeacherClass.First(x => x.Teacher_Id == id && x.ClassSubjectId == Model.SubClassId).StudentTeacherClassId;
+                        }
+                        @Html.HiddenFor(model => STCID, new { id = "STCID" })
+                        <label style="font-family: Candara; font-size: medium; color: darkcyan;">Add New:</label>
+                        <div id="user" class="col-lg-12" style="padding:0px">
+                            <input type="text" placeholder="Enter email" style="width: 100%; opacity: 0.6;" id="member" name="memeber" />
+                        </div>
+                    </div>
+                    <div id="submitdiv"></div>
+                    <div id="subjectS"></div>
+                </div>
+                @Scripts.Render("~/bundles/jquery")
+                <script>
+                    function AddStudent() {
+                        // alert("Add Student Called " + $("#member").val() + "  " + $('#STCID').val());
+                        $.post("/Teacher/AddSTCStudent", { member: $("#member").val(), STCID: $('#STCID').val() }, function (data) {
+                            var count = "Class Members: ";
+                            count += data.CountOfMembers;
+                            $("#heading").empty().append(count);
+                            $("#member").empty();
+                        });
+                    }
+
+                    function myFunction(id) {
+                        // alert("This user s" + id);
+                        $.post("/Teacher/getStudent", { UserId: id }, function (data) {
+
+                            $('#user').empty().append(data.Name);
+                            $("#list").hide();
+                            // alert(data.Name);
+                            var data = "<input type=" + "\"" + "submit" + "\"" + " value=" + "\"" + "submit" + "\"" + " onclick=" + "\"" + "AddStudent()" + "\"" + " id=" + "\"" + "submit" + "\"" + ">";
+                            $("#submitdiv").append(data);
+                        });
+                        //document.getElementById("uName").innerText(id);
+                    }
+
+                    $(document).ready(function () {
+                        // $("#QuizClick").hide();
+                        $("#from").hide();
+                        $("#own").hide();
+
+                        $('#member').change(function () {
+                            //alert($('#member').val());
+
+                            $.post("/Teacher/getStudentsName", { Name: $('#member').val(), stcId: $('#STCID').val() }, function (data) {
+                                $('#subjectS').empty().append(data.StudentName);
+                                // alert(data.StudentName);
+                            });
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="panel panel-default col-lg-6" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                <div class="panel-body" style="padding:3px; padding-bottom:0px">
+                    @foreach (var v in Model.Chapter)
+                    {
+                        <div class="panel panel-default col-lg-12" style="border-color: darkcyan; padding: 0%; margin: 0px; margin-bottom: 5px" id="@v.ChapterId">
+
+                            <!--
+                                <div class=" panel panel-primary ">
+                                    <div class="panel-heading" style="background-color:darkcyan">
+                                        Total Main Topics: 13
+                                    </div>
+                                </div>
+                            -->
+
+                            <div class="panel-heading sidebar-title" style="background-color: darkcyan; margin: 0px">
+                                <span style="font-size: 18px; font-family: Britannic; color: white">Chapter-@v.ChapterNo . @v.Name</span><br />
+                                <span style="font-size: small; font-family: Britannic; color: white">Total Main Topics: 13</span>
+                            </div>
+
+                            <div class="panel-body" style="padding:0px; margin:1%">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel-body">
+                                            <div>
+
+                                                @foreach (var data in v.MainTopic)
+                                                {
+                                                    int countOfLectures = data.Lecture.Where(x => x.Teacher_Id == id).Count();
+                                                    if (countOfLectures > 0)
+                                                    {
+                                                        <div class="col-lg-6">
+                                                            <b style="font-family: Arial; font-size: 14px; color: darkcyan; ">Topic No @data.MainTopicNo:</b>
+                                                            <a href="../../Teacher/Topic/@data.MainTopicId">
+                                                                <span style="font-family: Candara; font-size: medium; color: black;">@data.Name </span>
+                                                            </a>
+                                                            <br>
+                                                            <span style="font-family: Candara; font-size: medium; color: #227dbe;">Your Lectures:  @countOfLectures</span>
+                                                            <hr />
+
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-lg-6">
+                                                            <b style="font-family:Arial; font-size:14px;color:darkcyan">Topic No @data.MainTopicNo:</b>
+                                                            <a href="">
+                                                                <span style="font-family: Candara; font-size: medium; color: black;">@data.Name</span>
+                                                            </a>
+                                                            <br>
+                                                            <span style="font-family: Candara; font-size: medium; color: red;">Your Lectures:  @countOfLectures</span>
+                                                            <hr />
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

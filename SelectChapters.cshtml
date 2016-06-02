@@ -1,0 +1,95 @@
+﻿@model Test_MVC.Models.SubjectClass
+@using Test_MVC.Models
+@{
+    int tId = (int)Session["Id"];
+    int STC_ID = new db().StudentTeacherClass.First(x => x.ClassSubjectId == Model.SubClassId && x.Teacher_Id == tId).StudentTeacherClassId;
+    Session["STC_ID"] = STC_ID;
+}
+<div id="content_wrapper" style="min-height:600px" class="content single">
+    <div class="container">
+        <div class="row">
+            <form action="~/Teacher/SelectQuestions/@Model.SubClassId" class="form-horizontal" method="post" role="form">
+                <div class="panel panel-default col-lg-2 sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                    <div class="panel-heading sidebar-title" style="background-color: darkcyan;">
+                        <span style="font-size: 18px; font-family: Britannic; color: white">Select Option</span>
+                    </div>
+
+                    <div class="panel-body" style="padding:3%">
+                        <div class="form-group">
+                            <div class="col-lg-12" style="padding:0px">
+                                <label class="col-lg-6 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">From Pool: </label>
+                                <input type="radio" required value="Pool" style="margin-left: 5%; margin-top: 12px" name="Own" />
+                            </div>
+                            <div class="col-lg-12" style="padding:0px">
+                                <label class="col-lg-6 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Your Own: </label>
+                                <input type="radio" required value="Own" style="margin-left: 5%; margin-top: 12px" name="Own" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12" style="padding:0px">
+                                <label class="col-lg-8 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Total Questions: </label>
+                                <input type="text" required id="numOfQuestions" placeholder=" example: 10" style="margin-left:8%; opacity:0.6;" name="numOfQuestions" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 alert alert-warning" style="padding:1%; margin:1%">
+                    <strong style="font-family:Britannic; font-size:medium">@Model.Class.Name ==> @Model.Subject.Name</strong>
+                </div>
+                <div class="panel panel-default col-lg-8" style="border-color: darkcyan; padding: 0%; margin: 1%">
+                    <div class="panel-heading" style="background-color: darkcyan;">
+                        <span style="font-family: Britannic; font-size: large; color: white; ">Capters</span>
+                    </div>
+                    <div class="panel-body">
+                        @foreach (var v in Model.Chapter)
+                        {
+                            <input type="checkbox" value="@v.Name" style="margin-right:5%" name="chapter" /><span style="font-size:medium; font-family:'Lucida Bright'"> @v.Name</span><br />
+                            <hr />
+                        }
+                        <div class="col-lg-12" style="padding: 0px; margin-bottom: 5px">
+                            <div class="col-lg-4" style="padding:0px">
+                            </div>
+
+                            <div class="col-lg-4" style="padding: 0px;margin:5px; ">
+                                <input type="submit" value="Submit Quiz" class="form-control  btn btn-primary" style=" font-family:Arial; font-weight:600" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+    </div>
+
+    <!--            <div class="col-md-3 col-sm-4">-->
+    <!--            </div> -->
+
+</div>
+    @Scripts.Render("~/bundles/jquery")
+<script>
+
+     
+    $(document).ready(function () {
+
+        $("#numOfQuestions").change(function () {
+
+            var x = document.getElementById("numOfQuestions").value;
+           
+                try {
+                    if (x == "") throw "Empty";
+                    if (isNaN(x)) throw "not a number";
+                    if (x > 20) throw "too high";
+                    if (x < 5) throw "too low";
+                    $("#submit").show();
+                }
+                catch (err) {
+                   alert("Error : "+x+" is "+err+"\nYou cannot Submit with these parameters.");
+                    $("#submit").hide();
+                }
+            
+        });
+
+    });
+</script>

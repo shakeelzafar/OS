@@ -1,0 +1,153 @@
+﻿@using Test_MVC.Models
+@{
+    Layout = null;
+}
+@{
+
+    db ctx = new db();
+
+    List<Class> clas = ctx.Class.ToList();
+
+}
+<div class="panel panel-default col-md-7" style="border-color: darkcyan; padding: 0px; margin-top: 0%; margin-bottom: 0%">
+
+    <div class="panel-heading " style="background-color: darkcyan; ">
+        <span style="font-size: 18px; font-family: Britannic; color: white">Upload Lecture</span>
+    </div>
+    <div class="panel-body">
+
+        <form action="~/Teacher/Add_Lecture" class="form-horizontal" role="form" style="padding-left:5%" method="post">
+
+            <div class="form-group">
+                <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Class: </label>
+                <div class="col-lg-6 " style="">
+                    <select class="form-control input-sm" id="ClassSelector" name="Class" style="opacity:0.6" required>
+                        <option>-Select-</option>
+                        @foreach (var stc in clas)
+                        {
+                            <option onclick="ClassClicked(@stc.Name)">@stc.Name</option>
+                        }
+                    </select>
+                </div>
+                @Scripts.Render("~/bundles/jquery")
+                <script>
+
+                    function ClassClicked(val)
+                    {
+                        $.post("/Teacher/getSubjectName", { Name: val }, function (data) {
+                            // alert("FUnction Call");
+                            $('#subjectS').empty().append(data.SubjectName)
+                        });
+                    }
+
+                    $(document).ready(function () {
+                        $('#ClassSelector').change(function () {
+                            var Email = $('#ClassSelector').val();
+
+                          //  alert('User Name = ' + Email);
+
+                            $.post("/Teacher/getSubjectName", { Name: Email }, function (data) {
+
+                              //  alert(data.SubjectName);
+                                $('#subjectS').empty().append(data.SubjectName)
+                            });
+                        });
+                        $('#subjectS').change(function () {
+                            
+
+                            $.post("/Admin/getChapterName", { Name: $("#ClassSelector").val(), ID: $("#SubjectSelector").val() }, function (data) {
+
+                                        // alert(data.SubjectName);
+                                        $('#chapterS').empty().append(data.SubjectName)
+                                    });
+                        });
+                        $('#chapterS').change(function () {
+
+
+                            $.post("/Admin/getMainTopic", { Name: $("#ClassSelector").val(), ID: $("#SubjectSelector").val(), MainTopic: $("#ChapterSelector").val(), }, function (data) {
+
+                               //  alert(data.SubjectName);
+                                $('#mainTopicS').empty().append(data.SubjectName)
+                            });
+                        });
+                    });
+                 
+                    //function MainTopicSelect(id) {
+                    //    $.post("/Admin/getMainTopic", { ID: id }, function (data) {
+
+                    //        alert(data.SubjectName);
+                    //        $('#mainTopicS').empty().append(data.SubjectName)
+                    //    });
+                    //}
+                </script>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Subject: </label>
+                <div class="col-lg-6 " id="subjectS" >
+                    <select class="form-control input-sm" id="SubjectSelector" name="Subject" style="opacity:0.6" required>
+                        <option>-Select-</option>
+                    </select>
+                   
+                </div>
+                
+                    </div>
+              
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color:darkcyan;">Chapter: </label>
+                        <div class="col-lg-6 " id="chapterS">
+                            <select class="form-control input-sm" id="ChapterSelector" name="ChapterName" style="opacity:0.6" required>
+
+                                <option>-Select-</option>
+
+
+                            </select>
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Main-Topic: </label>
+                        <div class="col-lg-6 " id="mainTopicS">
+                            <select class="form-control input-sm" id="MainTopicSelector" name="MainTopicName" style="opacity:0.6" required>
+
+                                <option>-Select-</option>
+
+
+                            </select>
+                        </div>
+                    </div>
+                    <!-- give url of video or post video on your respective account
+                    i.e. Dailymotion or Youtube...
+                    and give acess to us...
+                    -->
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">Lecture: </label>
+                        <div class=" col-lg-6 ">
+                            <input class="form-control input-sm" type="text" placeholder="description" name="Description" style="opacity:0.6" required />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0px">
+                        <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;">URL: </label>
+                        <div class="col-lg-6 ">
+                            <input class="form-control input-sm" type="text" placeholder="url" name="Name" style="opacity:0.6" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" style="font-family: Candara; font-size: medium; color: darkcyan;"></label>
+                        <div class=" col-lg-6 ">
+                            <p style="font-family:Arial">Upload Your lecture on <b>Daily Motion</b> or <b>Youtube</b> and paste the url here.</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-3 col-lg-10 ">
+                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+

@@ -1,0 +1,140 @@
+﻿@model Test_MVC.Models.Lecture
+@using Test_MVC.Models
+@{
+    Layout = null;
+    UserProfile up = (UserProfile)Session["user"];
+
+}
+<div style="min-height:600px" id=" flecture">
+    <div id="col-md-7" class="col-lg-7 panel panel-default sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%;">
+
+        <!-- /.row -->
+
+        <div class="col-lg-12 panel-default " style="padding: 0%;">
+
+            <div class="panel-heading sidebar-title" style="background-color: darkcyan">
+                <span style="font-size: 18px; font-family: Britannic; color: white">@Model.Description</span>
+            </div>
+
+            <div style="padding:1%" id="">
+                <iframe frameborder="0" style="width:100%; height:430px" src="@Model.Name"></iframe>
+            </div>
+
+
+            @if (@Session["user"] != null)
+            {   <hr />
+                <br />
+                <div class="col-lg-12">
+                    <form action="../../Teacher/Add_Comment/@Model.LectureId" method="post" style="border:ridge ;width :100%">
+                        <textarea class="col-lg-12" name="Comment" id="Comment" placeholder="Ask a Question..."></textarea>
+                        <input type="submit" value="Comment">
+
+                    </form>
+                </div>
+            }
+
+            @{
+                Model.Comment.Reverse();
+                foreach (var v in Model.Comment)
+                {
+                    v.Reply.Reverse();
+                    int countOfRepl = 0;
+                    String RepId = "TogetOf" + v.CommentId;
+                    <div class="col-lg-12 panel panel-default" style="border-color:darkcyan; padding: 0%; margin-bottom:1%; ">
+
+                        <div class="col-lg-12 panel-body" style="background-color: darkcyan; padding: 0px; margin-bottom:0px">
+                            <div class="col-lg-12" style="padding:3px;">
+                                <img src="../../Content/images/logo.png" width="50" height="50" style="float:left; " />
+                                <p style="padding-top:3px">
+                                    <a><span style="color:white; margin-left: 1%; font-size: 17px">@v.UserProfile.UserName</span></a>
+                                    <br>
+                                    <span style="color: white; font-family: Arial; margin-left: 1%; font-size: 13px;">@v.When</span>
+                                </p>
+                            </div>
+                            <div class="col-lg-12" style="padding:0px; margin-top:0px">
+                                <p style="color: white; font-family: 'Century Gothic'; margin-left: 1%; font-size: 13px;">@v.Comment1</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 panel-body" style="background-color:rgba(248, 247, 247, 0.52); padding: 0px; margin: 0px;">
+                            <div class="col-lg-12" style="padding: 3px; margin-top: 1%;">
+                                <a class="btn btn-default" style="padding-top: 2px; padding-bottom: 2px; padding-left: 1%; margin-left: 1%; font-size: 10px; font-family: Arial; width: 63px; text-align: center; ">
+                                    <span onclick="AllReplys(@RepId)">All Replies</span>
+                                </a>
+                            </div>
+                            <div style="padding:3px; margin-top:1%;" id="@v.CommentId" class="col-lg-12">
+                                @foreach (var obj in v.Reply)
+                                {
+
+                                    countOfRepl = countOfRepl + 1;
+                                    if (countOfRepl < 5)
+                                    {
+                                        <div style="margin-left:1%">
+                                            <p><img src="../../Content/images/ width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="@RepId" onload="ToBeHide(@obj.ReplyId)" id="@obj.ReplyId" style="margin-left:1%">
+                                            <p><img src="../../Content/images/ width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                        </div>
+                                    }
+                                }
+                                @{
+                                String comId = "Reply" + v.CommentId;
+                                String rId = "pId" + v.CommentId;
+                                }
+
+                                <div id="@rId" class="col-lg-12" style="padding:1%; margin:0px">
+                                    <span class="col-lg-1 pull-left" style="padding:0px;">
+                                        <img src="../../Images/id.jpg" width="40px" height="40px" style="" />
+                                    </span>
+                                    <p class="col-lg-11" style="padding:0px;padding-top:3px">
+                                        <input class="form-control pull-right" style="" type="text" required name="Reply" onchange="Replythis(@v.CommentId)" id="@comId" placeholder="Answer tis question" />
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    @Scripts.Render("~/bundles/jquery")
+                    <script>
+
+                        function ToBeHide(id) {
+                            $("#" + id).hide();
+                        }
+                        function AllReplys(id) {
+                            $("." + id).show();
+                        }
+                        function Replythis(id) {
+                            $.post("/Teacher/SubmitReply", { id: id, Name: $("#Reply" + id).val() }, function (data) {
+
+                                var pi = "pId" + id;
+                                $('#' + pi).remove();
+                                $('#' + id).append(data.result);
+                                var ReplId = "Reply" + id;
+                                var str = "<div id=" + "\"" + pi + "\"" + " class=" + "\"" + "col-lg-12" + "\"" + "style=" + "\"" + "padding:1%; margin:0px" + "\"" + ">";
+                                str += "<span class=" + "\"" + "col-lg-1 pull-left" + "\"" + " style=" + "\"" + "padding:0px;" + "\"" + ">";
+                                str += "<img src=" + "\"" + "../../Images/id.jpg" + "\"" + " width=" + "\"" + "40px" + "\"" + " height=" + "\"" + "40px" + "\"" + " />";
+                                str += "</span>";
+                                str += " <p class=" + "\"" + "col-lg-11" + "\"" + "style=" + "\"" + "padding:0px;padding-top:3px" + "\"" + ">";
+                                ReplId.trim();
+                                str += "<input class=" + "\"" + "form-control pull-right" + "\"" + " type=" + " \"" + "text" + "\" required " + " name=" + " \"" + "Reply" + "\" " + " onchange=" + " \"" + "Replythis(" + id + ")" + "\"" + " id=" + "\"" + ReplId + "\" " + " placeholder=" + " \"" + "Answer this Question..." + "\" " + " />";
+                                str += " </p></div>";
+                                $("#" + id).append(str);
+
+                            });
+                        }
+
+                    </script>
+                }
+            }
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,317 @@
+﻿
+@using Test_MVC.Models
+@{
+    int id = (int)HttpContext.Current.Session["Id"];
+   List<StudentTeacherClass> up = new db().StudentTeacherClass.Where(x => x.Teacher_Id == id).ToList();
+   Session["upp"] = up;
+   UserProfile us = (UserProfile)Session["user"];
+}
+<div id="shaki" style="min-height:600px">
+    <div id="content_wrapper"   class="content single">
+        <div class="container" style="">
+            <div class="row " style="padding:0px">
+                <!--OLD CODE WITHOUT DESIGNING-->
+
+
+
+                <div class="col-lg-3 panel panel-default sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                    <div class="panel-heading sidebar-title" style="background-color: darkcyan">
+                        <span style="font-size: 18px; font-family: Britannic; color:white">Sessions</span>
+                    </div>
+
+                    <div class="panel-body" style="padding:1%; padding-bottom:0%">
+                        @{
+                            if (up != null)
+                            {
+                                foreach (var v in up.Select(x => x.SubjectClass))
+                                {
+                                    foreach (var obj in v.Subject.SubjectClass.Select(x => x.Subject))
+                                    {
+                                        <div class="col-lg-12 panel panel-default" style="border-color: darkcyan; padding: 5%; margin-bottom:1%">
+                                            <h4 style="font-family: Britannic; color: darkcyan; padding:0px; margin:0px">@v.Class.Name</h4>
+                                            <a class="" href="~/Teacher/Class/@v.SubClassId" style="color:darkcyan"><div id="menu-item-30013" class="panel panel-default Topic" style="padding: 8px; margin-top: 10px; background-color: #fbfbfb; font-size: medium; font-family: 'Century Gothic'">@obj.Name</div></a>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $(".Topic").hover(function () {
+                                $(this).css("color", "white");
+                                $(this).css("background-color", "darkcyan");
+                            },
+                            function () {
+                                $(this).css("color", "darkcyan");
+                                $(this).css("padding", "8px");
+                                $(this).css("background-color", "#fbfbfb ");
+                            }
+                            );
+
+                        });
+                    </script>
+
+                </div>
+
+                <div class="" id="shak" style="margin: 1%; padding: 0%">
+
+                    <div class="panel panel-default col-lg-2 pull-right" style="border-color:darkcyan; padding:0%; margin-bottom:5%">
+                        <div class="panel-heading" style="background-color: darkcyan;">
+                            <span style="font-size: 18px; font-family: Britannic; color: white">Upload Contents</span>
+                        </div>
+                        <div class="panel-body">
+
+                            <button class="btn btn-danger" value="Upload Lecture" onclick="LectureClick()" style="font-size: 15px; font-family:Arial; margin-bottom: 5%; width: 100%">
+                                <b>Upload Lecture</b>
+                            </button>
+
+                            <button id='modal-launcher' class="btn btn-danger" style="font-size: 15px; font-family: Arial; width: 100%; " data-toggle="modal" data-target="#signup-modal">
+                                <b>Upload Quiz</b>
+                            </button>
+
+                        </div>
+
+
+                    </div>
+                    @Scripts.Render("~/bundles/jquery")
+                    <script>
+                        function LectureClick() {
+                            // alert("Function Call");
+                            $("#shak").empty().load("/Teacher/AddLecture");
+                        }
+                    </script>
+
+                    <!-- ASK A QUESTION PANEL -->
+
+                    <div class="panel panel-success col-lg-6 " style="border-color: darkcyan; padding: 5px; padding-bottom:0px; margin:0px; margin-bottom:5px">
+                        @{
+                            try
+                            {
+                                if (up != null)
+                                {
+                                    <div class="col-lg-12 panel panel-default" style="border-color: darkcyan; padding: 0px; margin-bottom: 1%;">
+                                        <div class="panel-heading" style="background-color: #f5f5f5; padding:1%; padding-bottom:0px; margin:0%;">
+                                            <form action="../../Teacher/Add_ClassComment/@up[0].StudentTeacherClassId" method="post" style="">
+                                                <textarea class="col-lg-12 form-control input-sm" name="Comment" id="Comment" placeholder="Ask a Question..." required style="width:100%; min-height:18px"></textarea>
+                                                <input class="btn btn-primary" type="submit" value="Comment" style="margin-top:2%" />
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                }
+
+
+                                List<Comment> listofComment = new List<Comment>();
+                                List<StudentTeacherClass> listOfSTC = new db().StudentTeacherClass.Where(x => x.Teacher_Id == id).ToList();
+
+                                foreach (var v in listOfSTC)
+                                {
+                                    foreach (var obj in v.Comment)
+                                    {
+                                        listofComment.Add(obj);
+                                    }
+                                }
+
+                                listofComment.Reverse();
+                                foreach (var v in listofComment)
+                                {
+                                    v.Reply.Reverse();
+                                    int countOfRepl = 0;
+                                    String RepId = "TogetOf" + v.CommentId;
+                                    <div class="col-lg-12 panel panel-default" style="border-color:darkcyan; padding: 0%; margin-bottom:1%; ">
+
+                                        <div class="col-lg-12 panel-body" style="background-color: darkcyan; padding: 0px; margin-bottom:0px">
+                                            <div class="col-lg-12" style="padding:3px;">
+                                                <img src="../../Content/images/logo.png" width="50" height="50" style="float:left; " />
+                                                <p style="padding-top:3px">
+                                                    <a><span style="color:white; margin-left: 1%; font-size: 17px">@v.UserProfile.UserName</span></a>
+                                                    <br>
+                                                    <span style="color: white; font-family: Arial; margin-left: 1%; font-size: 13px;">@v.When</span>
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-12" style="padding:0px; margin-top:0px">
+                                                <p style="color: white; font-family: 'Century Gothic'; margin-left: 1%; font-size: 13px;">@v.Comment1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12 panel-body" style="background-color:rgba(248, 247, 247, 0.52); padding: 0px; margin: 0px;">
+                                            <div class="col-lg-12" style="padding: 3px; margin-top: 1%;">
+                                                <a class="btn btn-default" style="padding-top: 2px; padding-bottom: 2px; padding-left: 1%; margin-left: 1%; font-size: 10px; font-family: Arial; width: 63px; text-align: center; ">
+                                                    <span onclick="AllReplys(@RepId)">All Replies</span>
+                                                </a>
+                                            </div>
+                                            <div style="padding:3px; margin-top:1%;" id="@v.CommentId" class="col-lg-12">
+                                                @foreach (var obj in v.Reply)
+                                                {
+
+                                                    countOfRepl = countOfRepl + 1;
+                                                    if (countOfRepl < 5)
+                                                    {
+                                                        <div style="margin-left:1%">
+                                                            <p><img src="../../Content/images/icon.png" width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="@RepId" onload="ToBeHide(@obj.ReplyId)" id="@obj.ReplyId" style="margin-left:1%">
+                                                            <p><img src="../../Content/images/icon.png" width=" 40px" height="40px" /> <a href="../../Home/Profile/@obj.User_Id" style="margin-right:2%">@obj.UserProfile.UserName</a>@obj.Reply1</p>
+                                                        </div>
+                                                    }
+                                                }
+                                                @{
+                                                String comId = "Reply" + v.CommentId;
+                                                String rId = "pId" + v.CommentId;
+                                                }
+
+                                                <div id="@rId" class="col-lg-12" style="padding:1%; margin:0px">
+                                                    <span class="col-lg-1 pull-left" style="padding:0px;">
+                                                        <img src="../../Images/id.jpg" width="40px" height="40px" style="" />
+                                                    </span>
+                                                    <p class="col-lg-11" style="padding:0px;padding-top:3px">
+                                                        <input class="form-control pull-right" style="" type="text" required name="Reply" onchange="Replythis(@v.CommentId)" id="@comId" placeholder="Answer tis question" />
+                                                    </p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    @Scripts.Render("~/bundles/jquery")
+                                    <script>
+                                        function QuizClick() {
+                                            // alert("Function Call");
+                                            $("#shak").empty().load("/Teacher/SelectChapters");
+                                        }
+                                        function ClassClick() {
+                                            $("#formOfClass").show();
+                                        }
+
+                                        $(document).ready(function () {
+
+                                            $("#formOfClass").hide();
+                                            $('#ClassSelector').change(function () {
+
+                                                $.post("/Teacher/getSubjectName", { Name: $('#ClassSelector').val() }, function (data) {
+
+                                                    $('#subjectS').empty().append(data.SubjectName)
+                                                });
+                                            });
+
+                                        });
+
+                                        function ToBeHide(id) {
+                                            $("#" + id).hide();
+                                        }
+                                        function AllReplys(id) {
+                                            $("." + id).show();
+                                        }
+                                        function Replythis(id) {
+                                            $.post("/Teacher/SubmitReply", { id: id, Name: $("#Reply" + id).val() }, function (data) {
+
+                                                var pi = "pId" + id;
+                                                $('#' + pi).remove();
+                                                $('#' + id).append(data.result);
+                                                var ReplId = "Reply" + id;
+                                                var str = "<div id=" + "\"" + pi + "\"" + " class=" + "\"" + "col-lg-12" + "\"" + "style=" + "\"" + "padding:1%; margin:0px" + "\"" + ">";
+                                                str += "<span class=" + "\"" + "col-lg-1 pull-left" + "\"" + " style=" + "\"" + "padding:0px;" + "\"" + ">";
+                                                str += "<img src=" + "\"" + "../../Images/id.jpg" + "\"" + " width=" + "\"" + "40px" + "\"" + " height=" + "\"" + "40px" + "\"" + " />";
+                                                str += "</span>";
+                                                str += " <p class=" + "\"" + "col-lg-11" + "\"" + "style=" + "\"" + "padding:0px;padding-top:3px" + "\"" + ">";
+                                                ReplId.trim();
+                                                str += "<input class=" + "\"" + "form-control pull-right" + "\"" + " type=" + " \"" + "text" + "\" required " + " name=" + " \"" + "Reply" + "\" " + " onchange=" + " \"" + "Replythis(" + id + ")" + "\"" + " id=" + "\"" + ReplId + "\" " + " placeholder=" + " \"" + "Answer this Question..." + "\" " + " />";
+                                                str += " </p></div>";
+                                                $("#" + id).append(str);
+                                            });
+                                        }
+                                    </script>
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                <div id="toShow" class="col-lg-12 panel panel-default" style="padding: 0px; margin-bottom:0px; ">
+                                    <div class="panel-heading sidebar-title" style="background-color: darkcyan">
+                                        <span style="font-size: 18px; font-family: Britannic; color:white">Congratulations:</span>
+                                    </div>
+                                    <div class="panel-body" style="margin-bottom:4%;padding-bottom:10%;padding-top:4%; padding-bottom:0%">
+                                        <p style="font-size:20px">
+                                            Hi, <strong>@us.UserName</strong>. You are most welcome to mualam.<br />You can have sessions for your classes.
+
+                                            You can post Lectures and Quizes which will be beneficial for students.
+                                        </p>
+
+                                        <h3 style="color:darkcyan">Remember These</h3>
+                                        <ul style="font-size:18px; color:red">
+                                            <li><strong style="color:black">Please Click Upload Lecture</strong> So we can proceed with your desired classes.</li>
+                                            <li>By clicking Upload Lecture that lecture will go to Administration for aprovel.</li>
+                                            <li>Your Default Class will be set to that class to which you will post lecture.</li>
+                                            <li>By clicking Upload quiz you will have to select one of your class and create quiz.</li>
+                                            <li>Because Now you have no class, So you will be redirected to same page (here).</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                            }
+                        }
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!--            <div class="col-md-3 col-sm-4">-->
+            <!--            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header " style="background-color:darkcyan">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="myModalLabel" style="font-family:Britannic; color:white">Choose A Class</h2>
+            </div>
+            <div class="modal-body login-modal">
+               
+               
+                <div class="clearfix"></div>
+                <div id='social-icons-conatainer'>
+                    <div class='modal-body'>
+                        <form action="../../Teacher/SelectChapters" class="form-horizontal" role="form" style="" method="post">
+                            <select class="form-control input-sm" name="SubjectClass">
+                                Select A Class
+                                @foreach (var v in up.Select(x => x.SubjectClass))
+                                {
+                                    <option>
+                                        @v.Subject.Name  OF @v.Class.Name
+                                    </option>
+                                    <hr />
+                                }
+
+                            </select>
+                            <br>
+                            <br> 
+                            <button type="submit" id="butt" class="col-lg-12 btn btn-primary">Submit</button>
+                        </form>
+
+                    </div>
+
+                   
+                                    </div>
+                <div class="clearfix"></div> 
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer " style="background-color:darkcyan">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,191 @@
+﻿@using Test_MVC.Models
+
+@{
+    List<Quiz> li = ViewBag.qList;
+}
+ 
+
+
+<div id="content_wrapper" style="min-height:600px" class="content single">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default col-lg-3 sidebar-page rmm taxlist graphite" style="border-color: darkcyan; padding: 0%; margin: 1%; margin-bottom: 5%">
+                <div class="panel-heading sidebar-title" style="background-color: darkcyan;">
+                    <span style="font-size: 18px; font-family: Britannic; color: white">Quiz</span>
+                </div>
+                <div class="panel-body" style="padding-left:0px">
+                    <ul id=" menu-formget-features" class="rmm-main-list" style="display: block;">
+                        <li id="menu-item-30013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30013" style="font-size:medium; font-family:'Century Gothic'">Total Questions: </li>
+                        <li id="menu-item-30013" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30013" style="font-size:medium; font-family:'Century Gothic'">Total Marks: </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel panel-default col-lg-8" style="border-color: darkcyan; padding: 0%; margin: 1%">
+
+                <div class="panel-heading" style="background-color: darkcyan;">
+                    <span style="font-size: 18px; font-family: Britannic; color: white" id="childOfCooCoo">Select Questions</span>
+                </div>
+
+                @{
+                    int questId = 1;
+
+                    <div class="panel-body" style="padding:5px; padding-bottom:0px">
+                        @if (li.Count < 1)
+                        {
+                            <form action="~/Teacher/AddSelectedClassQuiz" class="form-horizontal" role="form" method="post">
+                                @foreach (var query in ViewBag.qList)
+                                {
+
+                                    <div class="panel panel-default" style="border-color: darkcyan; padding: 0px; margin-bottom: 5px">
+                                        <div class="panel-heading" style="background-color: darkcyan;">
+                                            <p style="text-align: left; font-family: Arial; font-size: medium; color:white "><b><ins>Question: @questId</ins></b></p>
+                                            <p style="text-align: left; font-family: Arial; font-size: medium; color: white"><b>@query.Statement</b></p>
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Option A:</label>
+                                                        <label class="control-label col-lg-9" style="text-align: left; font-family: Candara; font-size: medium; padding-left: 4%; ">
+                                                            @query.Option_A
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Option B:</label>
+                                                        <label class="control-label col-lg-9" style="text-align: left; font-family: Candara; font-size: medium; padding-left: 4%; ">
+                                                            @query.Option_B
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Option C:</label>
+                                                        <label class="control-label col-lg-9" style="text-align: left; font-family: Candara; font-size: medium; padding-left: 4%; ">
+                                                            @query.Option_C
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Option D:</label>
+                                                        <label class="control-label col-lg-9" style="text-align: left; font-family: Candara; font-size: medium; padding-left: 4%; ">
+                                                            @query.Option_D
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3" for="questions" style="font-family: Candara; font-size: medium; color: darkcyan;">Correct Option:</label>
+                                                        <label class="control-label col-lg-9" style="text-align: left; font-family: Candara; font-size: medium; padding-left: 4%; ">
+                                                            @query.Correct
+                                                        </label>
+                                                    </div>
+                                                    <!--
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-2" for="questions" style="font-family: Candara; font-size: medium; color: #227dbe;">Option D)</label>
+                                                        <div class="col-lg-9">
+                                                            <span class="form-control" style=" text-align: left; padding-left: 0%;">
+                                                                @query.Option_D
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    -->
+                                                    <!--
+                                                    <div class="col-2" style="padding-right: 0%; background-color: green">
+                                                        A):
+                                                    </div>
+                                                    <div class="col-lg-10" style=" text-align: left; padding-left: 10%; background-color: pink">@query.Option_A</div>
+                                                    <br />
+                                                    <div style="padding-right:0%">
+                                                        B):
+                                                    </div>
+                                                    <div style=" text-align: left; padding-left:10%">@query.Option_B</div>
+                                                    <br />
+                                                    <div style="padding-right:0%">
+                                                        C):
+                                                    </div>
+                                                    <div style=" text-align: left; padding-left:10%">@query.Option_C</div>
+                                                    <br />
+                                                    <div style="padding-right:0%">
+                                                        D):
+                                                    </div>
+                                                    <div style=" text-align: left; padding-left:10%">@query.Option_D</div>
+                                                    <br />
+                                                    <br />
+                                                    <div style="padding-right:0%">
+                                                        (Correct):
+                                                    </div>
+                                                    <div style=" text-align: left; padding-left:10%;"><p style="color:red">@query.Correct</p></div>
+                                                    -->
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-2" for="questions" style="font-family: Candara; font-size: medium; color: #227dbe;"></label>
+                                                        <div class="col-lg-9">
+                                                            <input type="radio" value="@query.QuestionId" style="margin-right: 1%; color:#3f9f16" name="@query.QuestionId" /><span style="color: #3f9f16; font-size:medium; "> Add To Quiz</span><br />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-2" for="questions" style="font-family: Candara; font-size: medium; color: #227dbe;"></label>
+                                                        <div class="col-lg-9">
+                                                            <input type="radio" value="@query.QuestionId" style="margin-right: 1%;" name="" /><span style="color: #d92b2b; font-size: medium; "> Remove from Quiz</span><br />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <!--
+                                                <div class="col-lg-2">
+                                                    <input type="radio" value="@query.QuestionId" style="margin-left:5%" name="@query.QuestionId" /> Add To Quiz<br />
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="radio" value="@query.QuestionId" style="margin-left:5%" name="" /> Remove from Quiz<br />
+                                                </div>
+                                                -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    questId = questId + 1;
+
+                                }
+
+                                <div class="panel panel-default col-lg-12" style="border-color: darkcyan; padding: 0px; margin-bottom: 5px">
+                                    <div class="col-lg-4" style="padding:0px">
+                                    </div>
+
+                                    <div class="col-lg-4" style="padding: 0px;margin:5px; ">
+                                        <input type="submit" value="Submit Quiz" class="form-control  btn btn-primary" style=" font-family:Arial; font-weight:600" />
+                                    </div>
+                                </div>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="panel panel-default col-lg-12" style=" padding: 0px; margin-bottom: 5px">
+                                <h3>Sorry, No Data Found...!!!</h3>
+                            </div>
+
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+
+
+            <!--            <div class="col-md-3 col-sm-4">-->
+            <!--            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
